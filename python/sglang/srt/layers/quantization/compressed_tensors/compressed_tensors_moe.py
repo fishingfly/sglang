@@ -104,8 +104,11 @@ class CompressedTensorsMoEMethod(FusedMoEMethodBase):
         input_quant = quant_config.target_scheme_map["Linear"].get("input_activations")
 
         if quant_config._is_wNa16_group_channel(weight_quant, input_quant):
+            if get_bool_env_var("SGLANG_DISABLE_WNA16_MOE_MARLIN", "false"):
+                logger.info_once("Using CompressedTensorsWNA16MoEMethod")
+                return CompressedTensorsWNA16MoEMethod(quant_config)
             logger.info_once("Using CompressedTensorsWNA16MarlinMoEMethod")
-            return CompressedTensorsWNA16MoEMethod(quant_config)
+            return CompressedTensorsWNA16MarlinMoEMethod(quant_config)
         elif quant_config._is_fp4a4_nvfp4(weight_quant, input_quant):
             logger.info_once("Using CompressedTensorsW4A4Nvfp4MoEMethod")
             return CompressedTensorsW4A4Nvfp4MoEMethod(quant_config)
