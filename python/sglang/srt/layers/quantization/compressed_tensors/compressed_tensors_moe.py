@@ -81,6 +81,7 @@ __all__ = [
     "CompressedTensorsW4A4Nvfp4MoEMethod",
     "CompressedTensorsW8A8Fp8MoEMethod",
     "CompressedTensorsWNA16MoEMethod",
+    "CompressedTensorsWNA16MarlinMoEMethod",
 ]
 
 
@@ -1202,7 +1203,7 @@ class CompressedTensorsWNA16MoEMethod(CompressedTensorsMoEMethod):
         return StandardCombineInput(hidden_states=output)
 
 
-class CompressedTensorsWNA16MoEMethod(CompressedTensorsMoEMethod):
+class CompressedTensorsWNA16MarlinMoEMethod(CompressedTensorsMoEMethod):
 
     def __init__(self, quant_config: CompressedTensorsConfig):
         self.quant_config = quant_config
