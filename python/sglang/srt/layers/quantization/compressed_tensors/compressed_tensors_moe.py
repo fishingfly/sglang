@@ -81,6 +81,7 @@ __all__ = [
     "CompressedTensorsW4A4Nvfp4MoEMethod",
     "CompressedTensorsW8A8Fp8MoEMethod",
     "CompressedTensorsWNA16MoEMethod",
+    "CompressedTensorsWNA16MarlinMoEMethod",
 ]
 
 
@@ -853,7 +854,7 @@ class CompressedTensorsW8A8Fp8MoEMethod(CompressedTensorsMoEMethod):
             return self.runner.run(dispatch_output, quant_info)
 
 
-class CompressedTensorsWNA16MoEMethod(CompressedTensorsMoEMethod):
+class CompressedTensorsWNA16MarlinMoEMethod(CompressedTensorsMoEMethod):
 
     def __init__(self, quant_config: CompressedTensorsConfig, num_gpu_experts=-1):
         self.quant_config = quant_config
