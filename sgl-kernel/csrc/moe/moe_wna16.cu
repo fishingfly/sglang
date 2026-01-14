@@ -7,7 +7,7 @@
 
 #include <cuda_fp16.h>
 #include <cuda_bf16.h>
-#include "moe_wna16_utils.h"
+#include "moe_wna16_utils.cuh"
 
 #define DIVIDE(x, size) (((x) + (size) - 1) / (size))
 
