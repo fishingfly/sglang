@@ -857,7 +857,7 @@ class CompressedTensorsW8A8Fp8MoEMethod(CompressedTensorsMoEMethod):
             return self.runner.run(dispatch_output, quant_info)
 
 
-class CompressedTensorsWNA16MoEMethod(CompressedTensorsMoEMethod):
+class CompressedTensorsWNA16MarlinMoEMethod(CompressedTensorsMoEMethod):
 
     def __init__(self, quant_config: CompressedTensorsConfig, num_gpu_experts=-1):
         self.quant_config = quant_config
@@ -1206,7 +1206,7 @@ class CompressedTensorsWNA16MoEMethod(CompressedTensorsMoEMethod):
         return StandardCombineInput(hidden_states=output)
 
 
-class CompressedTensorsWNA16MarlinMoEMethod(CompressedTensorsMoEMethod):
+class CompressedTensorsWNA16MoEMethod(CompressedTensorsMoEMethod):
 
     def __init__(self, quant_config: CompressedTensorsConfig):
         self.quant_config = quant_config
