@@ -4,6 +4,14 @@ import pytest
 import sgl_kernel
 import torch
 from sgl_kernel.utils import is_arch_support_pdl
+from sglang.srt.utils import is_musa
+
+_is_musa = is_musa()
+if _is_musa:
+    test_dtypes = [torch.float16]
+else:
+    test_dtypes = [torch.float16, torch.float32]
+
 
 
 def llama_rms_norm(x, w, eps=1e-6):
@@ -71,12 +79,12 @@ def test_norm(batch_size, hidden_size, dtype, specify_out):
 
 @pytest.mark.parametrize("batch_size", [1, 19, 99, 989])
 @pytest.mark.parametrize("hidden_size", [111, 500, 1024, 3072, 3584, 4096, 8192, 16384])
-@pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+@pytest.mark.parametrize("dtype", test_dtypes)
 def test_fused_add_rmsnorm(batch_size, hidden_size, dtype):
     eps = 1e-6
 
     x = torch.randn(batch_size, hidden_size, dtype=dtype, device="cuda")
-    residual = torch.randn_like(x)
+    residual = torch.randn_like(x, device="cuda")
     weight = torch.randn(hidden_size, dtype=dtype, device="cuda")
 
     x_native, residual_native = fused_add_rms_norm(
