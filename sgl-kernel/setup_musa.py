@@ -80,6 +80,7 @@ sources = [
     str(_FLASHINFER_REPO.source_dir / "csrc/norm.cu"),
     str(_FLASHINFER_REPO.source_dir / "csrc/renorm.cu"),
     str(_FLASHINFER_REPO.source_dir / "csrc/sampling.cu"),
+    "csrc_musa/elementwise/fused_add_rms_norm_kernel.mu",
 ]
 
 cxx_flags = ["force_mcc"]

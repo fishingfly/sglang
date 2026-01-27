@@ -20,6 +20,13 @@ limitations under the License.
 #include "torch_musa/csrc/aten/musa/MUSAContext.h"
 
 TORCH_LIBRARY_EXPAND(sgl_kernel, m) {
+
+  /*
+   * From csrc/elementwise
+   */
+  m.def("fused_add_rmsnorm(Tensor! input, Tensor! residual, Tensor weight, float eps, bool enable_pdl) -> ()");
+  m.impl("fused_add_rmsnorm", torch::kMUSA, &musa_fused_add_rms_norm);
+
   /*
    * From FlashInfer
    */
