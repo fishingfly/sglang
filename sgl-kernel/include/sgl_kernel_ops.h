@@ -1020,3 +1020,27 @@ torch::Tensor timestep_embedding(
     double downscale_freq_shift,
     double scale,
     int64_t max_period);
+
+/*
+ * From csrc/musa
+ */
+
+#ifdef USE_MUSA
+void batched_rotary_embedding_contiguous(
+    torch::Tensor &positions, // [num_tokens]
+    torch::Tensor &query,     // [num_tokens, num_heads, head_size]
+    torch::Tensor &key,       // [num_tokens, num_kv_heads, head_size]
+    int64_t head_size,
+    torch::Tensor &cos_sin_cache, // [max_position, rot_dim]
+    bool is_neox, int64_t rot_dim,
+    torch::Tensor &cos_sin_cache_offsets // [num_tokens]
+);
+
+void rotary_embedding_contiguous(
+    torch::Tensor &positions, // [num_tokens]
+    torch::Tensor &query,     // [num_tokens, num_heads, head_size]
+    torch::Tensor &key,       // [num_tokens, num_kv_heads, head_size]
+    int64_t head_size,
+    torch::Tensor &cos_sin_cache, // [max_position, rot_dim]
+    bool is_neox);
+#endif

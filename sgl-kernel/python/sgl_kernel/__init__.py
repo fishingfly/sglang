@@ -135,6 +135,9 @@ from sgl_kernel.version import __version__
 if torch.version.hip is not None:
     from sgl_kernel.elementwise import gelu_quick
 
+from sglang.srt.utils import is_musa
+
+_is_musa = is_musa()
 
 def create_greenctx_stream_by_value(*args, **kwargs):
     from sgl_kernel.spatial import create_greenctx_stream_by_value as _impl
@@ -146,3 +149,10 @@ def get_sm_available(*args, **kwargs):
     from sgl_kernel.spatial import get_sm_available as _impl
 
     return _impl(*args, **kwargs)
+
+
+if _is_musa:
+    from sgl_kernel.musa import (
+        musa_batched_rotary_embedding_contiguous,
+        musa_rotary_embedding_contiguous,
+    )

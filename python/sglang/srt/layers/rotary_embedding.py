@@ -48,6 +48,12 @@ if is_npu():
     NPU_ROTARY_MUL_MAX_NUM_HEADS = 1000
     NPU_ROTARY_MUL_MAX_HEAD_SIZE = 896
 
+if _is_musa:
+    from sgl_kernel import (
+        musa_batched_rotary_embedding_contiguous,
+        musa_rotary_embedding_contiguous,
+    )
+
 
 def _rotate_neox(x: torch.Tensor) -> torch.Tensor:
     x1 = x[..., : x.shape[-1] // 2]
@@ -1016,6 +1022,44 @@ class DeepseekScalingRotaryEmbedding(RotaryEmbedding):
         else:
             return self.forward_native(positions, query, key, offsets)
 
+    def forward_musa(
+        self,
+        positions: torch.Tensor,
+        query: torch.Tensor,
+        key: torch.Tensor,
+        offsets: Optional[torch.Tensor] = None,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        print("in forward_musa")
+        if (
+            self.cos_sin_cache.device != query.device
+            or self.cos_sin_cache.dtype != query.dtype
+        ):
+            self.cos_sin_cache = self.cos_sin_cache.to(query.device, dtype=query.dtype)
+        # ops.rotary_embedding()/batched_rotary_embedding()
+        # are in-place operations that update the query and key tensors.
+        if offsets is not None:
+            print("use musa_batched_rotary_embedding_contiguous")
+            musa_batched_rotary_embedding_contiguous(
+                positions,
+                query,
+                key,
+                self.head_size,
+                self.cos_sin_cache,
+                self.is_neox_style,
+                self.rotary_dim,
+                offsets,
+            )
+        else:
+            print("use musa_rotary_embedding_contiguous")
+            musa_rotary_embedding_contiguous(
+                positions,
+                query,
+                key,
+                self.head_size,
+                self.cos_sin_cache,
+                self.is_neox_style,
+            )
+        return query, key
 
 class Llama3RotaryEmbedding(RotaryEmbedding):
 

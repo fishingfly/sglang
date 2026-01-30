@@ -53,6 +53,19 @@ TORCH_LIBRARY_EXPAND(sgl_kernel, m) {
 
   m.def("top_k_mask_logits(Tensor logits, Tensor mask_logits, Tensor? maybe_top_k_arr, int top_k_val) -> ()");
   m.impl("top_k_mask_logits", torch::kMUSA, &top_k_mask_logits);
+
+  /*
+   * From csrc/musa
+   */
+  m.def(
+      "musa_batched_rotary_embedding_contiguous(Tensor! positions, Tensor! query, Tensor! key, "
+      "int head_size, Tensor! cos_sin_cache, bool is_neox, int rot_dim, Tensor! cos_sin_cache_offsets) -> ()");
+  m.impl("musa_batched_rotary_embedding_contiguous", torch::kMUSA, &batched_rotary_embedding_contiguous);
+
+  m.def(
+      "musa_rotary_embedding_contiguous(Tensor! positions, Tensor! query, Tensor! key, "
+      "int head_size, Tensor! cos_sin_cache, bool is_neox) -> ()");
+  m.impl("musa_rotary_embedding_contiguous", torch::kMUSA, &rotary_embedding_contiguous);
 }
 
 REGISTER_EXTENSION(common_ops)

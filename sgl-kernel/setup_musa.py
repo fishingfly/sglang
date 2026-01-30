@@ -81,6 +81,8 @@ sources = [
     str(_FLASHINFER_REPO.source_dir / "csrc/renorm.cu"),
     str(_FLASHINFER_REPO.source_dir / "csrc/sampling.cu"),
     "csrc_musa/elementwise/fused_add_rms_norm_kernel.mu",
+    # XXX (MUSA): The following files contain MUSA-specific implementations.
+    "csrc_musa/musa/pos_encoding_contiguous.mu",
 ]
 
 cxx_flags = ["force_mcc"]
@@ -178,18 +180,18 @@ class _CustomBuildExt(BuildExtension):
             print("Skipping third-party repositories cloning (SKIP_THIRD_PARTY=1)")
         else:
             print("Cloning third-party repositories...")
-            self._clone_and_checkout(
-                _MUTLASS_REPO.source_dir,
-                _MUTLASS_REPO.git_repository,
-                _MUTLASS_REPO.git_tag,
-                _MUTLASS_REPO.git_shallow,
-            )
-            self._clone_and_checkout(
-                _FLASHINFER_REPO.source_dir,
-                _FLASHINFER_REPO.git_repository,
-                _FLASHINFER_REPO.git_tag,
-                _FLASHINFER_REPO.git_shallow,
-            )
+            # self._clone_and_checkout(
+            #     _MUTLASS_REPO.source_dir,
+            #     _MUTLASS_REPO.git_repository,
+            #     _MUTLASS_REPO.git_tag,
+            #     _MUTLASS_REPO.git_shallow,
+            # )
+            # self._clone_and_checkout(
+            #     _FLASHINFER_REPO.source_dir,
+            #     _FLASHINFER_REPO.git_repository,
+            #     _FLASHINFER_REPO.git_tag,
+            #     _FLASHINFER_REPO.git_shallow,
+            # )
             print("Third-party repositories ready.")
 
         super().run()
